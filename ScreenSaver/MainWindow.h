@@ -27,6 +27,21 @@ namespace ScreenSaver
 				delete components;
 			}
 		}
+
+		virtual void WndProc(Message% m) override
+		{
+			switch (m.Msg)
+			{
+			case HookMaster::HOOKMASTER_SHOW_HIDE_CODE:
+			{
+				isVisible ? this->HideWindow() : this->ShowWindow();
+				break;
+			}
+			}
+			Form::WndProc(m);
+			return;
+		}
+
 	private: 
 		const int WINDOW_WIDTH = 534;
 		const int WINDOW_HEIGHT = 129;
@@ -46,13 +61,28 @@ namespace ScreenSaver
 		System::Windows::Forms::Label^    labelMinimizeOrShow;
 		System::Windows::Forms::Label^    labelStatusValue;
 		
+		bool isVisible = true;
 		bool isSaverActive = true;
 		int screenButtonCode = NO_BUTTON;
 		HHOOK keyboardHook;
 		System::ComponentModel::Container ^components;
+
+		void HideWindow()
+		{
+			isVisible = false;
+			this->Hide();
+		}
+
+		void ShowWindow()
+		{
+			isVisible = true;
+			this->Show();
+		}
+
 		void InitializeComponent(void)
 		{
-			HookMaster *master = HookMaster::getInstance();
+			HWND k = static_cast<HWND>(Handle.ToPointer());
+			HookMaster *master = HookMaster::createInstance(static_cast<HWND>(Handle.ToPointer()));
 			master->setupHook();
 			this->buttonChangePath = (gcnew System::Windows::Forms::Button());
 			this->textBoxPath = (gcnew System::Windows::Forms::TextBox());
@@ -64,6 +94,7 @@ namespace ScreenSaver
 			this->labelMinimizeOrShow = (gcnew System::Windows::Forms::Label());
 			this->labelStatusValue = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			// 
 			// buttonChangePath
 			// 

@@ -1,15 +1,15 @@
 #include "HookMaster.h"
 
-HHOOK HookMaster::hookHandle = NULL;
 HookMaster *HookMaster::instance = NULL;
 
-HookMaster::HookMaster()
+HookMaster::HookMaster(HWND hParent)
 {
+	this->hParentWnd = hParent;
 }
 
 void HookMaster::setupHook()
 {
-	this->hookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
+	this->hookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, 0, 0);
 }
 
 HookMaster::~HookMaster()
@@ -18,14 +18,25 @@ HookMaster::~HookMaster()
 		delete instance;
 }
 
-LRESULT CALLBACK HookMaster::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK HookMaster::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	return CallNextHookEx(hookHandle, nCode, wParam, lParam);
+	KBDLLHOOKSTRUCT hookedKey = *((KBDLLHOOKSTRUCT*)lParam);
+	//Check for Alt+Win+PrtScr
+	if (hookedKey.vkCode == VK_SNAPSHOT && wParam == WM_SYSKEYDOWN && (GetAsyncKeyState(VK_LWIN) & (1 << 15)))
+	{
+		SendMessage(instance->hParentWnd, instance->HOOKMASTER_SHOW_HIDE_CODE, NULL, NULL);
+	}
+	return CallNextHookEx(instance->hookHandle, nCode, wParam, lParam);
 }
 
 HookMaster *HookMaster::getInstance()
 {
+	return instance;
+}
+
+HookMaster *HookMaster::createInstance(HWND hParent)
+{
 	if (!instance)
-		instance = new HookMaster();
+		instance = new HookMaster(hParent);
 	return instance;
 }

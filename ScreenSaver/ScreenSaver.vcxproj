@@ -143,13 +143,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HookMaster.h" />
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ScreenshotMaker.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HookMaster.cpp" />
     <ClCompile Include="ScreenSaver.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="ScreenshotMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainWindow.resx">

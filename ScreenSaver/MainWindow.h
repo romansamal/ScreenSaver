@@ -1,4 +1,6 @@
 #pragma once
+#include "HookMaster.h"
+#include <Windows.h>
 
 namespace ScreenSaver 
 {
@@ -46,11 +48,12 @@ namespace ScreenSaver
 		
 		bool isSaverActive = true;
 		int screenButtonCode = NO_BUTTON;
-
-	private:
+		HHOOK keyboardHook;
 		System::ComponentModel::Container ^components;
 		void InitializeComponent(void)
 		{
+			HookMaster *master = HookMaster::getInstance();
+			master->setupHook();
 			this->buttonChangePath = (gcnew System::Windows::Forms::Button());
 			this->textBoxPath = (gcnew System::Windows::Forms::TextBox());
 			this->buttonChangeSaverStatus = (gcnew System::Windows::Forms::Button());

@@ -147,10 +147,14 @@
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="PressKeyForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="ScreenshotMaker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HookMaster.cpp" />
+    <ClCompile Include="PressKeyForm.cpp" />
     <ClCompile Include="ScreenSaver.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="ScreenshotMaker.cpp" />
@@ -158,6 +162,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PressKeyForm.resx">
+      <DependentUpon>PressKeyForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

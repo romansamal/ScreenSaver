@@ -20,6 +20,9 @@
     <ClInclude Include="HookMaster.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="PressKeyForm.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ScreenSaver.cpp">
@@ -32,6 +35,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="HookMaster.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PressKeyForm.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 #include "HookMaster.h"
+#include "PressKeyForm.h"
 #include <Windows.h>
 
 namespace ScreenSaver 
@@ -17,6 +18,14 @@ namespace ScreenSaver
 		MainWindow(void)
 		{
 			InitializeComponent();
+		}
+
+		property int ScreenButton
+		{
+			int get()
+			{
+				return this->screenButtonCode;
+			}
 		}
 
 	protected:
@@ -37,8 +46,17 @@ namespace ScreenSaver
 				isVisible ? this->HideWindow() : this->ShowWindow();
 				break;
 			}
+			
+			case HookMaster::HOOKMASTER_NEW_SCREEN_KEY:
+			{
+				this->screenButtonCode = m.LParam.ToInt32();
+				this->Enabled = true;
+				break;
 			}
-			Form::WndProc(m);
+
+			default:
+				Form::WndProc(m);
+			}
 			return;
 		}
 
@@ -163,6 +181,7 @@ namespace ScreenSaver
 			this->buttonNewScreenKey->TabIndex = 7;
 			this->buttonNewScreenKey->Text = L"New key";
 			this->buttonNewScreenKey->UseVisualStyleBackColor = true;
+			this->buttonNewScreenKey->Click += gcnew EventHandler(this, &MainWindow::ButtonSetNewKeyClicked);
 			// 
 			// labelMinimizeOrShow
 			// 
@@ -204,6 +223,12 @@ namespace ScreenSaver
 			this->Text = (String ^)WINDOW_TITLE;
 			this->ResumeLayout(false);
 			this->PerformLayout();
+		}
+
+		void ButtonSetNewKeyClicked(System::Object^  sender, EventArgs^ e)
+		{
+			PressKeyForm::OpenForm();
+			this->Enabled = false;
 		}
 	};
 }

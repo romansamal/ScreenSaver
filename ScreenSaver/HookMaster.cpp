@@ -9,7 +9,7 @@ HookMaster::HookMaster(HWND hParent)
 
 void HookMaster::setupHook()
 {
-	this->hookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, 0, 0);
+	this->hHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, 0, 0);
 }
 
 HookMaster::~HookMaster()
@@ -21,12 +21,17 @@ HookMaster::~HookMaster()
 LRESULT CALLBACK HookMaster::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT hookedKey = *((KBDLLHOOKSTRUCT*)lParam);
+	if (ScreenSaver::PressKeyForm::IsWaiting)
+	{
+		ScreenSaver::PressKeyForm::CloseForm();
+		SendMessage(instance->hParentWnd, instance->HOOKMASTER_NEW_SCREEN_KEY, NULL, hookedKey.vkCode);
+	}
 	//Check for Alt+Win+PrtScr
 	if (hookedKey.vkCode == VK_SNAPSHOT && wParam == WM_SYSKEYDOWN && (GetAsyncKeyState(VK_LWIN) & (1 << 15)))
 	{
 		SendMessage(instance->hParentWnd, instance->HOOKMASTER_SHOW_HIDE_CODE, NULL, NULL);
 	}
-	return CallNextHookEx(instance->hookHandle, nCode, wParam, lParam);
+	return CallNextHookEx(instance->hHook, nCode, wParam, lParam);
 }
 
 HookMaster *HookMaster::getInstance()

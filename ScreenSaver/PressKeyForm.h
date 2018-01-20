@@ -57,8 +57,10 @@ namespace ScreenSaver {
 
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(PressKeyForm::typeid));
 			this->pressKeyLabel = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			// 
 			// pressKeyLabel
 			// 
@@ -77,10 +79,12 @@ namespace ScreenSaver {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(273, 80);
 			this->Controls->Add(this->pressKeyLabel);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"PressKeyForm";
 			this->Text = L"Press Key";
 			this->ResumeLayout(false);
 			this->PerformLayout();
+
 		}
 	};
 }

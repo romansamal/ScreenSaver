@@ -51,6 +51,8 @@ namespace ScreenSaver
 			{
 				this->screenButtonCode = m.LParam.ToInt32();
 				this->Enabled = true;
+				this->BringToFront();
+				SetScreenButtonLabel();
 				break;
 			}
 
@@ -97,8 +99,22 @@ namespace ScreenSaver
 			this->Show();
 		}
 
+		void SetScreenButtonLabel()
+		{
+			if (screenButtonCode == NO_BUTTON)
+			{
+				this->labelScreenKeyValue->Text = "-";
+			}
+			else
+			{
+				Keys key = (Keys)screenButtonCode;
+				this->labelScreenKeyValue->Text = key.ToString();
+			}
+		}
+
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(PressKeyForm::typeid));
 			HWND k = static_cast<HWND>(Handle.ToPointer());
 			HookMaster *master = HookMaster::createInstance(static_cast<HWND>(Handle.ToPointer()));
 			master->setupHook();
@@ -113,10 +129,11 @@ namespace ScreenSaver
 			this->labelStatusValue = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			// 
 			// buttonChangePath
 			// 
-			this->buttonChangePath->Location = System::Drawing::Point(428, 20);
+			this->buttonChangePath->Location = System::Drawing::Point(440, 20);
 			this->buttonChangePath->Name = L"buttonChangePath";
 			this->buttonChangePath->Size = System::Drawing::Size(75, 23);
 			this->buttonChangePath->TabIndex = 0;
@@ -156,7 +173,7 @@ namespace ScreenSaver
 			this->labelScreenKey->AutoSize = true;
 			this->labelScreenKey->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->labelScreenKey->Location = System::Drawing::Point(306, 76);
+			this->labelScreenKey->Location = System::Drawing::Point(280, 76);
 			this->labelScreenKey->Name = L"labelScreenKey";
 			this->labelScreenKey->Size = System::Drawing::Size(83, 17);
 			this->labelScreenKey->TabIndex = 5;
@@ -167,15 +184,15 @@ namespace ScreenSaver
 			this->labelScreenKeyValue->AutoSize = true;
 			this->labelScreenKeyValue->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			this->labelScreenKeyValue->Location = System::Drawing::Point(390, 76);
+			this->labelScreenKeyValue->Location = System::Drawing::Point(360, 76);
 			this->labelScreenKeyValue->Name = L"labelScreenKeyValue";
 			this->labelScreenKeyValue->Size = System::Drawing::Size(32, 17);
 			this->labelScreenKeyValue->TabIndex = 6;
-			this->labelScreenKeyValue->Text = L"-";
+			this->SetScreenButtonLabel();
 			// 
 			// buttonNewScreenKey
 			// 
-			this->buttonNewScreenKey->Location = System::Drawing::Point(428, 74);
+			this->buttonNewScreenKey->Location = System::Drawing::Point(440, 74);
 			this->buttonNewScreenKey->Name = L"buttonNewScreenKey";
 			this->buttonNewScreenKey->Size = System::Drawing::Size(75, 23);
 			this->buttonNewScreenKey->TabIndex = 7;

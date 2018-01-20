@@ -85,6 +85,7 @@ namespace ScreenSaver
 		bool isSaverActive = true;
 		int screenButtonCode = NO_BUTTON;
 		HHOOK keyboardHook;
+		String ^screenFolderPath = (String ^) TEXTBOX_DEFAULT_PATH;
 		System::ComponentModel::Container ^components;
 
 		void HideWindow()
@@ -110,6 +111,16 @@ namespace ScreenSaver
 				Keys key = (Keys)screenButtonCode;
 				this->labelScreenKeyValue->Text = key.ToString();
 			}
+		}
+
+		void SetSaverStatusLabel()
+		{
+			this->labelStatusValue->Text = (isSaverActive) ? (String ^)TEXTBOX_STATUS_ENABLED : (String ^)TEXTBOX_STATUS_DISABLED;
+		}
+
+		void SetTextBoxPath()
+		{
+			this->textBoxPath->Text = screenFolderPath;
 		}
 
 		void InitializeComponent(void)
@@ -139,6 +150,7 @@ namespace ScreenSaver
 			this->buttonChangePath->TabIndex = 0;
 			this->buttonChangePath->Text = L"Set path";
 			this->buttonChangePath->UseVisualStyleBackColor = true;
+			this->buttonChangePath->Click += gcnew EventHandler(this, &MainWindow::ButtonChangePathClicked);
 			// 
 			// textBoxPath
 			// 
@@ -146,7 +158,7 @@ namespace ScreenSaver
 			this->textBoxPath->Name = L"textBoxPath";
 			this->textBoxPath->Size = System::Drawing::Size(380, 20);
 			this->textBoxPath->TabIndex = 1;
-			this->textBoxPath->Text = (String ^)TEXTBOX_DEFAULT_PATH;
+			this->SetTextBoxPath();
 			// 
 			// buttonChangeSaverStatus
 			// 
@@ -156,6 +168,7 @@ namespace ScreenSaver
 			this->buttonChangeSaverStatus->TabIndex = 2;
 			this->buttonChangeSaverStatus->Text = L"Change";
 			this->buttonChangeSaverStatus->UseVisualStyleBackColor = true;
+			this->buttonChangeSaverStatus->Click += gcnew EventHandler(this, &MainWindow::ButtonChangeStatusClicked);
 			// 
 			// labelCurrentSaverStatus
 			// 
@@ -220,7 +233,7 @@ namespace ScreenSaver
 			this->labelStatusValue->Name = L"labelStatusValue";
 			this->labelStatusValue->Size = System::Drawing::Size(46, 17);
 			this->labelStatusValue->TabIndex = 9;
-			this->labelStatusValue->Text = (isSaverActive) ? (String ^)TEXTBOX_STATUS_ENABLED : (String ^)TEXTBOX_STATUS_DISABLED;
+			SetSaverStatusLabel();
 			// 
 			// MainWindow
 			// 
@@ -246,6 +259,22 @@ namespace ScreenSaver
 		{
 			PressKeyForm::OpenForm();
 			this->Enabled = false;
+		}
+
+		void ButtonChangeStatusClicked(System::Object^  sender, EventArgs^ e)
+		{
+			isSaverActive = !isSaverActive;
+			SetSaverStatusLabel();
+		}
+
+		void ButtonChangePathClicked(System::Object^  sender, EventArgs^ e)
+		{
+			FolderBrowserDialog ^dialog = gcnew FolderBrowserDialog();
+			if (dialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			{
+				this->screenFolderPath = dialog->SelectedPath;
+				this->SetTextBoxPath();
+			}
 		}
 	};
 }

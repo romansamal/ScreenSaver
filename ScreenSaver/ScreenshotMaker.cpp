@@ -11,8 +11,8 @@ ScreenshotMaker::~ScreenshotMaker()
 }
 
 
-void ScreenshotMaker::takeScreen()
-{/*
+HBITMAP ScreenshotMaker::takeScreen()
+{
 	HDC hScreenDC = CreateDCA("DISPLAY", NULL, NULL, NULL);
 	int width = GetDeviceCaps(hScreenDC, HORZRES);
 	int height = GetDeviceCaps(hScreenDC, VERTRES);
@@ -23,5 +23,28 @@ void ScreenshotMaker::takeScreen()
 	BitBlt(hMemoryDC, 0, 0, width, height, hScreenDC, 0, 0, SRCCOPY);
 	hBitmap = (HBITMAP)SelectObject(hMemoryDC, hOldBitmap);
 	DeleteDC(hMemoryDC);
-	DeleteDC(hScreenDC);*/
+	DeleteDC(hScreenDC);
+	return hBitmap;
+}
+
+void ScreenshotMaker::saveAsPng(HBITMAP hBmp, string sPath)
+{
+	CImage img;
+	img.Attach(hBmp);
+	string sPathFinal(sPath + "\\" + getFileName() + ".png");
+	CString cPath(sPathFinal.c_str());
+	img.Save(cPath, ImageFormatPNG);
+	return;
+}
+
+string ScreenshotMaker::getFileName()
+{
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[80] = { 0 };
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime(buffer, sizeof(buffer), "%d-%m-%Y %I_%M_%S", timeinfo);
+	string str(buffer);
+	return str;
 }

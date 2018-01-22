@@ -1,7 +1,10 @@
 #pragma once
 #include "HookMaster.h"
+#include "ScreenshotMaker.h"
 #include "PressKeyForm.h"
+#include <string>
 #include <Windows.h>
+#include <msclr\marshal_cppstd.h>
 
 namespace ScreenSaver 
 {
@@ -47,6 +50,17 @@ namespace ScreenSaver
 				break;
 			}
 			
+			case HookMaster::HOOKMASTER_MAKE_SCREENSHOT:
+			{
+				ScreenshotMaker maker;
+				String ^pathManaged = screenFolderPath;
+				if (!isSaverActive)
+					return;
+				std::string pathUnmanaged = msclr::interop::marshal_as<std::string>(pathManaged);
+				maker.saveAsPng(maker.takeScreen(), pathUnmanaged);
+				break;
+			}
+
 			case HookMaster::HOOKMASTER_NEW_SCREEN_KEY:
 			{
 				this->screenButtonCode = m.LParam.ToInt32();

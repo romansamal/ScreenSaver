@@ -21,15 +21,23 @@ HookMaster::~HookMaster()
 LRESULT CALLBACK HookMaster::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT hookedKey = *((KBDLLHOOKSTRUCT*)lParam);
-	if (ScreenSaver::PressKeyForm::IsWaiting)
-	{
-		ScreenSaver::PressKeyForm::CloseForm();
-		SendMessage(instance->hParentWnd, instance->HOOKMASTER_NEW_SCREEN_KEY, NULL, hookedKey.vkCode);
-	}
 	//Check for Alt+Win+PrtScr
 	if (hookedKey.vkCode == VK_SNAPSHOT && wParam == WM_SYSKEYDOWN && (GetAsyncKeyState(VK_LWIN) & (1 << 15)))
 	{
 		SendMessage(instance->hParentWnd, instance->HOOKMASTER_SHOW_HIDE_CODE, NULL, NULL);
+	}
+	else if (wParam == WM_KEYDOWN)
+	{
+		if (instance->nScreenKey == hookedKey.vkCode)
+		{
+			SendMessage(instance->hParentWnd, instance->HOOKMASTER_MAKE_SCREENSHOT, NULL, NULL);
+		}
+		else if (ScreenSaver::PressKeyForm::IsWaiting)
+		{
+			ScreenSaver::PressKeyForm::CloseForm();
+			SendMessage(instance->hParentWnd, instance->HOOKMASTER_NEW_SCREEN_KEY, NULL, hookedKey.vkCode);
+			instance->nScreenKey = hookedKey.vkCode;
+		}
 	}
 	return CallNextHookEx(instance->hHook, nCode, wParam, lParam);
 }

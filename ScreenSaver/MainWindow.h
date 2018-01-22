@@ -125,6 +125,7 @@ namespace ScreenSaver
 
 		void InitializeComponent(void)
 		{
+			this->MaximizeBox = false;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(PressKeyForm::typeid));
 			HWND k = static_cast<HWND>(Handle.ToPointer());
 			HookMaster *master = HookMaster::createInstance(static_cast<HWND>(Handle.ToPointer()));

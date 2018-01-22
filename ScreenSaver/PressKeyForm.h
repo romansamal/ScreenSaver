@@ -57,6 +57,8 @@ namespace ScreenSaver {
 
 		void InitializeComponent(void)
 		{
+			this->ControlBox = false;
+			this->MaximizeBox = false;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(PressKeyForm::typeid));
 			this->pressKeyLabel = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
